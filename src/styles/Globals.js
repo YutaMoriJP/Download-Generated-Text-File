@@ -8,7 +8,7 @@ const Global = createGlobalStyle`
         font-family: Arial, Helvetica, sans-serif;
         font-size: 14px;
         --bg-dark: #212529;
-        --bg-light: #dee2e6;
+        --bg-light: #ced4da;
         --bg-dark-container: #495057;
         --bg-light-container: #f1f3f5;
         --size: 5px;
@@ -24,9 +24,17 @@ const Global = createGlobalStyle`
     body {
         text-align:center
     }
+    button[disabled] {
+        color: grey!important;
+    }
     body[data-theme='dark']{
         background: var(--bg-dark);
         color: var(--bg-light);
+        form[class~='theme'] {
+            background: #1b1a34;
+            box-shadow: 5px 5px 25px #495057;
+       
+        }
         button[class~='basic'] {
             background: var(--bg-dark);
             color: var(--bg-light)       
@@ -44,12 +52,20 @@ const Global = createGlobalStyle`
         }
 
         a {
-            color: var(--bg-light);
+            color: var(--bg-dark);
+         }
+        a[class~='theme'] {
+            color:var(--bg-dark);
+            background: var(--bg-light);
         }
     }
     body[data-theme='light'] {
         background: var(--bg-light);
         color:var(--bg-dark);
+        form[class~='theme'] {
+            background: #9775fa;
+            box-shadow: 5px 5px 25px #868e96;
+        }
         button[class~='basic'] {
             background: var(--bg-light);
             color: var(--bg-dark)         
@@ -65,7 +81,12 @@ const Global = createGlobalStyle`
             }
           
          }
-         a{color:var(--bg-dark)}
+         a{
+             }
+        a[class~='theme'] {
+            color:var(--bg-light);
+            background: var(--bg-dark);
+        }
       
     }
     div [data-theme="light"] {

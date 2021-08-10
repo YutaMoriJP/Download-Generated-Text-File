@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../styles/Button";
 
 const Theme = () => {
-  const [theme, setTheme] = React.useState("light");
+  const [theme, setTheme] = React.useState("dark");
   React.useEffect(() => {
     document.body.dataset.theme = theme;
     document.getElementById("main-container").dataset.theme = theme;

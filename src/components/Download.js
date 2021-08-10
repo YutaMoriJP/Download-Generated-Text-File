@@ -14,6 +14,15 @@ const reducer = (state, action) => {
   }
 };
 
+/**
+ *
+ * @param {string | object} url - it can either be a blob object that can be converted to an object URL with URL.createObjectURL, or the URL of the resource that needs to be downloaded
+ * @param {string} download - the desired file name. If nothing is passed, then the default value 'file' will be used
+ * @param {function} onOpen - state setter function that updates the open state to true, which opens up a notification message like 'Ready to download'
+ * onOpen is called after object URL is created in useEffect
+ * @returns {element} download UI is rendered by <Download/>
+ */
+
 const Download = ({ url = "", download = "file", onOpen }) => {
   const [{ status, error, href }, dispatch] = useReducer(reducer, {
     status: "idle",
@@ -86,8 +95,13 @@ const Download = ({ url = "", download = "file", onOpen }) => {
         <p>{error.message || "Something went wrong"}</p>
       )}
       {status === "resolved" && (
-        <Link href={href} download={download || "file"} onClick={handleClick}>
-          DOWNLOAD - {download || "file"}.txt
+        <Link
+          href={href}
+          download={download || "file"}
+          onClick={handleClick}
+          className="theme"
+        >
+          Download - {download || "file"}.txt
         </Link>
       )}
     </>

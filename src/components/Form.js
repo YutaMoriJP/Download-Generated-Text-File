@@ -50,8 +50,8 @@ const Form = () => {
     <>
       <Error>
         Fill in both first and last name fields, and clicking 'submit' generates
-        a download button to the text file with the created content. The
-        filename field is optional.
+        a download button to the text file with the created content. The content
+        will be in JSON format. The file name field is optional.
         <Link
           github
           href="https://github.com/YutaMoriJP/Download-Generated-Text-File"
@@ -62,7 +62,7 @@ const Form = () => {
         </Link>
       </Error>
 
-      <Formstyled onSubmit={handleSubmit}>
+      <Formstyled onSubmit={handleSubmit} className="theme">
         <Input
           htmlFor="FIRST NAME"
           placeholder="*Enter first name"

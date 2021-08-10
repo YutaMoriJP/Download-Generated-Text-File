@@ -4,7 +4,7 @@ import InputStyled from "../styles/Input";
 const Input = ({ htmlFor, ...rest }) => {
   return (
     <>
-      <label id={htmlFor}>{htmlFor}</label>
+      <label htmlFor={htmlFor}>{htmlFor}</label>
       <InputStyled id={htmlFor} {...rest} />
     </>
   );
