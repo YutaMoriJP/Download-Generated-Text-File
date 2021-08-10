@@ -7,6 +7,14 @@ const Link = styled.a`
     text-decoration: underline;
   }
   ${props =>
+    props.github &&
+    css`
+      font-weight: 900;
+      ::after {
+        content: "✨";
+      }
+    `}
+  ${props =>
     props.download &&
     css`
       ::after {

@@ -7,6 +7,7 @@ import Formstyled from "../styles/Form";
 import Error from "./Error";
 import useOpen from "../useHooks/useOpen";
 import Message from "./Message";
+import Link from "../styles/Link";
 
 const Form = () => {
   const [nameInput, resetName] = useInput("");
@@ -51,7 +52,16 @@ const Form = () => {
         Fill in both first and last name fields, and clicking 'submit' generates
         a download button to the text file with the created content. The
         filename field is optional.
+        <Link
+          github
+          href="https://github.com/YutaMoriJP/Download-Generated-Text-File"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Github
+        </Link>
       </Error>
+
       <Formstyled onSubmit={handleSubmit}>
         <Input
           htmlFor="FIRST NAME"
