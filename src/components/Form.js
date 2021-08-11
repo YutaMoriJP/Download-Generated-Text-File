@@ -55,6 +55,8 @@ const Form = () => {
     //adds property extension to old and new file names
     file = file.includes("txt") ? file : !file ? "file.txt" : file + ".txt";
     //this optimizes the component and prevents unnecessary renders
+    //it checks if the new blob and old blob have the same content or not
+    //the compareBlob function returns a promise so await keyword is needed
     const isSameBlob = await compareBlob(newBlob, previousBlob);
 
     if (isSameBlob && file === previousFileName) {
