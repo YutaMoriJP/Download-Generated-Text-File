@@ -35,16 +35,9 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
     },
     layzLoad
   );
-  const handleClick = () => {
-    if (typeof url !== "string") {
-      //in <Fetch/> this allows users to download the content more than once
-      setTimeout(() => {
-        URL.revokeObjectURL(href);
-      }, 500);
-    }
-  };
 
   useEffect(() => {
+    URL.revokeObjectURL(href); //revoking the url object here allows for multiple downloads
     let didCancel = false;
     if (!url) return;
     let controller = new AbortController();
@@ -100,6 +93,7 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
       didCancel = true;
       controller.abort();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, onOpen]);
   return (
     <>
@@ -108,12 +102,7 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
         <p>{error.message || "Something went wrong"}</p>
       )}
       {status === "resolved" && (
-        <Link
-          href={href}
-          download={download || "file"}
-          onClick={handleClick}
-          className="theme"
-        >
+        <Link href={href} download={download || "file"} className="theme">
           Download - {download || "file"}
         </Link>
       )}
