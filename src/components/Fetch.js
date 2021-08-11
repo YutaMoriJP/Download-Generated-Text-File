@@ -6,7 +6,6 @@ import Message from "./Message";
 import Describe from "./Describe";
 import Box from "../styles/BoxColumn";
 
-//https://jsonplaceholder.typicode.com/users/1
 const Fetch = () => {
   const [url, setUrl] = React.useState("");
   const { open, onOpen, onClose } = useOpen(false);

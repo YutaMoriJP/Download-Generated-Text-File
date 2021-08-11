@@ -25,7 +25,12 @@ const reducer = (state, action) => {
  * @returns {element} download UI is rendered by <Download/>
  */
 
-const Download = ({ url = "", download = "file.txt", onOpen }) => {
+const Download = ({
+  url = "",
+  download = "file.txt",
+  onOpen,
+  setMessageText = () => null,
+}) => {
   const [{ status, error, href }, dispatch] = useReducer(
     reducer,
     {
@@ -37,7 +42,6 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
   );
 
   useEffect(() => {
-    URL.revokeObjectURL(href); //revoking the url object here allows for multiple downloads
     let didCancel = false;
     if (!url) return;
     let controller = new AbortController();
@@ -79,6 +83,10 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
           }
         }
         onOpen();
+        setMessageText({
+          messageText: "Content is ready to be downloaded!",
+          color: "seagreen",
+        });
       } catch (error) {
         if (didCancel || signal.sborted) {
           return;
@@ -90,6 +98,7 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
     };
     downloadAsync();
     return () => {
+      URL.revokeObjectURL(href); //revoking the url object here allows for multiple downloads or else a network error will happen
       didCancel = true;
       controller.abort();
     };

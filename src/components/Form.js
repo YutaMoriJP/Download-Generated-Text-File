@@ -17,10 +17,17 @@ const Form = () => {
   const [usernameInput, resetUsername] = useInput("");
   const [filenameInput, resetFilename] = useInput("");
   const [download, setDownload] = useState("file.txt");
-  const { open, onOpen, onClose } = useOpen(false);
   const [status, setStatus] = useState("idle");
   const [blob, setBlob] = useState(null);
   const [oldFileName, setOldFileName] = useState("");
+
+  //state for <Message/>
+  const { open, onOpen, onClose } = useOpen(false);
+  const [{ messageText, color }, setMessageText] = useState({
+    messageText: "",
+    color: "",
+  });
+
   //deps value update for previousFilename
   //returns the previous value of argument - it's a ref and not a state
   const previousBlob = usePrevious(blob);
@@ -61,6 +68,11 @@ const Form = () => {
 
     if (isSameBlob && file === previousFileName) {
       //if neither blob's content has NOT changed, no state updates are required"
+      onOpen();
+      setMessageText({
+        messageText: "The content and the file name are the same",
+        color: "#ff6b6b",
+      });
       return;
     }
 
@@ -115,11 +127,16 @@ const Form = () => {
         </Button>
       </Formstyled>
       {status === "resolved" && (
-        <Download url={blob} onOpen={onOpen} download={download} />
+        <Download
+          url={blob}
+          onOpen={onOpen}
+          download={download}
+          setMessageText={setMessageText}
+        />
       )}
       {open && (
-        <Message onClose={onClose} ms={1000}>
-          Content is ready to be downloaded!
+        <Message onClose={onClose} ms={1500} bgColor={color}>
+          {messageText || "Content is ready to be downloaded!"}
         </Message>
       )}
     </>
