@@ -26,7 +26,6 @@ const reducer = (state, action) => {
  */
 
 const Download = ({ url = "", download = "file.txt", onOpen }) => {
-  console.log("donwload renders");
   const [{ status, error, href }, dispatch] = useReducer(
     reducer,
     {

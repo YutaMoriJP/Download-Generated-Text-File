@@ -15,7 +15,7 @@ const Fetch = () => {
     setUrl("https://jsonplaceholder.typicode.com/users/1");
   return (
     <>
-      <Describe style={{ paddingTop: "30px " }}>
+      <Describe style={{ paddingTop: "45px " }}>
         You also have the option to download a user profile from the
         jsonplaceholder API. The Download component handles generated content
         from either user inputs or served data from an API.
