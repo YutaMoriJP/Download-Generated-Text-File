@@ -1,6 +1,8 @@
 import { useEffect, useReducer } from "react";
 import Link from "../styles/Link";
 
+const layzLoad = state => state;
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "pending":
@@ -23,12 +25,17 @@ const reducer = (state, action) => {
  * @returns {element} download UI is rendered by <Download/>
  */
 
-const Download = ({ url = "", download = "file", onOpen }) => {
-  const [{ status, error, href }, dispatch] = useReducer(reducer, {
-    status: "idle",
-    error: null,
-    href: "",
-  });
+const Download = ({ url = "", download = "file.txt", onOpen }) => {
+  console.log("donwload renders");
+  const [{ status, error, href }, dispatch] = useReducer(
+    reducer,
+    {
+      status: "idle",
+      error: null,
+      href: "",
+    },
+    layzLoad
+  );
   const handleClick = () => {
     setTimeout(() => {
       URL.revokeObjectURL(href);
@@ -50,7 +57,11 @@ const Download = ({ url = "", download = "file", onOpen }) => {
         } else {
           const res = await fetch(url, {
             method: "GET",
-            headers: { "Content-Type": "application/json, image/*, text/*" },
+            headers: {
+              "Content-Type":
+                "application/json, image/*, text/*, charset=utf-8",
+              Authorization: "basic",
+            },
             mode: "cors",
             cache: "default",
           });
@@ -87,10 +98,9 @@ const Download = ({ url = "", download = "file", onOpen }) => {
       controller.abort();
     };
   }, [url, onOpen]);
-
   return (
     <>
-      {status === "pending" && <p>pending...</p>}
+      {status === "pending" && <p>...</p>}
       {status === "rejected" && (
         <p>{error.message || "Something went wrong"}</p>
       )}
@@ -101,7 +111,7 @@ const Download = ({ url = "", download = "file", onOpen }) => {
           onClick={handleClick}
           className="theme"
         >
-          Download - {download || "file"}.txt
+          Download - {download || "file"}
         </Link>
       )}
     </>

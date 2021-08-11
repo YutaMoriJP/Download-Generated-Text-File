@@ -25,12 +25,10 @@ const Message = ({ onClose, ms = 0, children, ...rest }) => {
   console.log(typeof children);
   const timerRef = React.useRef();
   React.useEffect(() => {
-    console.log("timer is subscribed");
     timerRef.current = setTimeout(() => {
       onClose();
     }, ms);
     return () => {
-      console.log("timer is cleared");
       onClose();
       clearTimeout(timerRef.current);
     };

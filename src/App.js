@@ -1,7 +1,7 @@
 import Container, { Global } from "./components/Container";
 import Theme from "./components/Theme";
 import Form from "./components/Form";
-
+import Fetch from "./components/Fetch";
 function App() {
   return (
     <>
@@ -9,6 +9,7 @@ function App() {
       <Container>
         <Theme />
         <Form />
+        <Fetch />
       </Container>
     </>
   );

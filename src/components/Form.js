@@ -4,51 +4,94 @@ import useInput from "../useHooks/useInput";
 import Download from "./Download";
 import Input from "./Input";
 import Formstyled from "../styles/Form";
-import Error from "./Error";
+import Describe from "./Describe";
 import useOpen from "../useHooks/useOpen";
 import Message from "./Message";
 import Link from "../styles/Link";
+import usePrevious from "../useHooks/usePreviousRender";
+import compareBlob from "../util/compareBlob";
+import previousFileNameDeps from "../util/previousFileNameDeps";
 
 const Form = () => {
+  console.log("<Form/>");
+  //local state from either custom or build in hooks
   const [nameInput, resetName] = useInput("");
   const [usernameInput, resetUsername] = useInput("");
   const [filenameInput, resetFilename] = useInput("");
-  const [download, setDownload] = useState("file");
-
+  const [download, setDownload] = useState("file.txt");
   const { open, onOpen, onClose } = useOpen(false);
-
   const [status, setStatus] = useState("idle");
   const [blob, setBlob] = useState(null);
 
+  //deps value update for previousFilename
+  //returns the previous value of argument - it's a ref and not a state
+  const previousBlob = usePrevious(blob);
+  const previousFileName = usePrevious(
+    filenameInput.value,
+    previousFileNameDeps,
+    "false"
+  );
+  console.log("previousFileName", previousFileName);
+  //utility value to control whether the button is disabled or not
   const disabled =
     !nameInput.value.replace(/\s/g, "") ||
     !usernameInput.value.replace(/\s/g, "");
 
+  //utility function that resets input fields
   const reset = React.useCallback(() => {
     resetName();
     resetUsername();
     resetFilename();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handleSubmit = event => {
+
+  //event handler function
+  const handleSubmit = async event => {
+    //listens to a form submit, so event.prevenDefault() blocks a page refresh
     event.preventDefault();
+    //extract value from input.value
     const { value: name } = nameInput;
     const { value: username } = usernameInput;
-    const { value: file } = filenameInput;
+    let { value: file } = filenameInput;
+
+    //a new blob object is created
+    const newBlob = new Blob([JSON.stringify({ name, username }, null, 2)], {
+      type: "text/plain",
+    });
+
+    //adds property extension to old and new file names
+    file = file.includes("txt") ? file : !file ? "file.txt" : file + ".txt";
+    let previousFile =
+      previousFileName && previousFileName.includes("txt")
+        ? previousFileName
+        : !previousFileName
+        ? "file.txt"
+        : previousFileName + ".txt";
+    //this optimizes the component and prevents unnecessary renders
+    const isSameBlob = await compareBlob(newBlob, previousBlob);
+    const isSameFile = previousFile === file;
+
+    if (isSameBlob && isSameFile) {
+      //if neither blob's content has NOT changed, no state updates are required"
+      return;
+    }
+
+    //state updates
+    //setDownload sets the file name
     setDownload(file.replace(/\s/g, ""));
-    setBlob(
-      new Blob([JSON.stringify({ name, username }, null, 2)], {
-        type: "text/plain",
-      })
-    );
+    setBlob(newBlob);
+    //updates status to resolved, which renders <Download/>
     setStatus("resolved");
   };
+
+  //effect
   React.useEffect(() => {
+    //after status updates (to resolved), reset is triggered
     reset();
-  }, [status, reset]);
+  }, [status, reset, blob]);
   return (
     <>
-      <Error>
+      <Describe>
         Fill in both first and last name fields, and clicking 'submit' generates
         a download button to the text file with the created content. The content
         will be in JSON format. The file name field is optional.
@@ -60,7 +103,7 @@ const Form = () => {
         >
           Github
         </Link>
-      </Error>
+      </Describe>
 
       <Formstyled onSubmit={handleSubmit} className="theme">
         <Input
@@ -82,13 +125,13 @@ const Form = () => {
           CREATE FILE
         </Button>
       </Formstyled>
+      {status === "resolved" && (
+        <Download url={blob} onOpen={onOpen} download={download} />
+      )}
       {open && (
         <Message onClose={onClose} ms={1000}>
           Content is ready to be downloaded!
         </Message>
-      )}
-      {status === "resolved" && (
-        <Download url={blob} onOpen={onOpen} download={download} />
       )}
     </>
   );
