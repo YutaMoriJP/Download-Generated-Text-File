@@ -36,9 +36,12 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
     layzLoad
   );
   const handleClick = () => {
-    setTimeout(() => {
-      URL.revokeObjectURL(href);
-    }, 500);
+    if (typeof url !== "string") {
+      //in <Fetch/> this allows users to download the content more than once
+      setTimeout(() => {
+        URL.revokeObjectURL(href);
+      }, 500);
+    }
   };
 
   useEffect(() => {
