@@ -10,7 +10,6 @@ import Message from "./Message";
 import Link from "../styles/Link";
 import usePrevious from "../useHooks/usePreviousRender";
 import compareBlob from "../util/compareBlob";
-import previousFileNameDeps from "../util/previousFileNameDeps";
 
 const Form = () => {
   //local state from either custom or build in hooks
@@ -21,16 +20,12 @@ const Form = () => {
   const { open, onOpen, onClose } = useOpen(false);
   const [status, setStatus] = useState("idle");
   const [blob, setBlob] = useState(null);
-
+  const [oldFileName, setOldFileName] = useState("");
   //deps value update for previousFilename
   //returns the previous value of argument - it's a ref and not a state
   const previousBlob = usePrevious(blob);
-  const previousFileName = usePrevious(
-    filenameInput.value,
-    previousFileNameDeps,
-    "false"
-  );
-  //utility value to control whether the button is disabled or not
+  const previousFileName = usePrevious(oldFileName);
+
   const disabled =
     !nameInput.value.replace(/\s/g, "") ||
     !usernameInput.value.replace(/\s/g, "");
@@ -59,17 +54,10 @@ const Form = () => {
 
     //adds property extension to old and new file names
     file = file.includes("txt") ? file : !file ? "file.txt" : file + ".txt";
-    let previousFile =
-      previousFileName && previousFileName.includes("txt")
-        ? previousFileName
-        : !previousFileName
-        ? "file.txt"
-        : previousFileName + ".txt";
     //this optimizes the component and prevents unnecessary renders
     const isSameBlob = await compareBlob(newBlob, previousBlob);
-    const isSameFile = previousFile === file;
 
-    if (isSameBlob && isSameFile) {
+    if (isSameBlob && file === previousFileName) {
       //if neither blob's content has NOT changed, no state updates are required"
       return;
     }
@@ -80,6 +68,7 @@ const Form = () => {
     setBlob(newBlob);
     //updates status to resolved, which renders <Download/>
     setStatus("resolved");
+    setOldFileName(file);
   };
 
   //effect

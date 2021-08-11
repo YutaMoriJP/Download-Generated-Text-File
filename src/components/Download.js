@@ -55,6 +55,7 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
             dispatch({ type: "resolved", payload: { href } });
           }
         } else {
+          dispatch({ type: "pending" });
           const res = await fetch(url, {
             method: "GET",
             headers: {
@@ -100,7 +101,7 @@ const Download = ({ url = "", download = "file.txt", onOpen }) => {
   }, [url, onOpen]);
   return (
     <>
-      {status === "pending" && <p>...</p>}
+      {status === "pending" && <p>loading...</p>}
       {status === "rejected" && (
         <p>{error.message || "Something went wrong"}</p>
       )}
