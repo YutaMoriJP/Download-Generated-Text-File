@@ -13,7 +13,6 @@ import compareBlob from "../util/compareBlob";
 import previousFileNameDeps from "../util/previousFileNameDeps";
 
 const Form = () => {
-  console.log("<Form/>");
   //local state from either custom or build in hooks
   const [nameInput, resetName] = useInput("");
   const [usernameInput, resetUsername] = useInput("");
@@ -31,7 +30,6 @@ const Form = () => {
     previousFileNameDeps,
     "false"
   );
-  console.log("previousFileName", previousFileName);
   //utility value to control whether the button is disabled or not
   const disabled =
     !nameInput.value.replace(/\s/g, "") ||

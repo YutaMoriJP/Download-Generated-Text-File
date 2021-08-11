@@ -12,7 +12,6 @@
  * if true, then useEffect is returned without re-assigning the ref value
  */
 const previousFileNameDeps = value => {
-  console.log("previousFileNameDeps", value);
   return value !== "" ? value : "false";
 };
 
